@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 16:45:19 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/11 16:04:49 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/05/13 18:46:41 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,6 @@ int		ft_isprint(int c);
 
 size_t	ft_strlen(const char *s);
 void	*ft_memset(void *ptr, int c, size_t len);
+void	*ft_bzero(void *ptr, size_t len);
+
 #endif

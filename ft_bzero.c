@@ -6,14 +6,13 @@
 /*   By: jcolque <jcolque@student.42barcelona.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/12 19:08:10 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/12 20:11:20 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/05/13 18:46:13 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-:x
-
+void	*ft_bzero(void *ptr, size_t len)
 {
-
+	return(ft_memset(ptr, '0', len));
 }
