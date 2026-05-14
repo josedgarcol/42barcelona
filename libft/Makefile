@@ -6,7 +6,7 @@
 #    By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/30 17:25:12 by jcolque           #+#    #+#              #
-#    Updated: 2026/05/13 18:46:49 by jcolque          ###   ########.fr        #
+#    Updated: 2026/05/14 12:43:22 by jcolque          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,13 +52,13 @@ endef
 
 all: $(NAME)
 
-$(NAME): $(OBJS) Makefile
+$(NAME): $(OBJS)
 	@printf "\n\n"
 	@$(AR) $(NAME) $(OBJS)
 	@echo "$(GREEN)✓ $(NAME) created successfully.$(RESET)"
 	@echo
 
-%.o: %.c $(HEADER) Makefile
+%.o: %.c $(HEADER)
 	$(call progress)
 	@$(CC) $(CFLAGS) -c $< -o $@
 

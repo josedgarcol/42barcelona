@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/01 17:47:54 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/13 20:38:47 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/05/14 14:19:32 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,41 @@ int	main(void)
 
 	printf("   memset %s\n", arrayc_a);
 
-	char	*str;
-	str = "abc";
-	str = ft_bzero(arrayc, 3);
-	printf("ft_bzero     %s\n", str);
+	//char	*str;
+	//str = "abc";
+	//str = ft_bzero(arrayc, 3);
+	//printf("ft_bzero     %s\n", str);
+	
+	char	str[] = "hola mundo";
+	ft_bzero(str, 1);
+	printf("ft_bzero  %s\n", str);
+
+	char	str_a[10];
+	size_t	i;
+	int	total;
+
+	total = 0;
+	i = 0;
+	ft_bzero(str_a, sizeof(str_a));
+	while (i < sizeof(str_a))
+	{
+	printf("%d | ", str_a[i]);
+	total += printf("%d", str_a[i]);
+	i++;
+	}
+	printf("\n%zu", sizeof(str_a));
+	printf("\n%d", total);	
+	printf("\n");
 	return (0);
 }
+
+
+
+
+
+
+
+
+
+
+
