@@ -1,8 +1,20 @@
-*.out
+# Archivos de configuración del editor
+.clangd
+compile_flags.txt
+
+# Logico
+.gitignore
+
+# Binarios, objetos y main
 *.o
 *.a
+*.out
+*.so
+main*.c
 
-libftTester/
-test/
-
+# Archivos temporales
 *.swp
+.DS_Store
+
+# Directorios
+/libftTester
