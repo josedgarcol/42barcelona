@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 14:22:08 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/18 15:58:54 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/05/23 17:31:20 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	{
 		*d++ = *s++;
 	}
-	return(dest);
+	return (dest);
 }
 /*
 int	main(void)

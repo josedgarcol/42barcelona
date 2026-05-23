@@ -1,33 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   main6.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/18 16:06:18 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/23 16:31:59 by jcolque          ###   ########.fr       */
+/*   Created: 2026/05/23 19:00:21 by jcolque           #+#    #+#             */
+/*   Updated: 2026/05/23 19:55:52 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <string.h>
+size_t  strlcpy(char *dst, const char *src, size_t siz);
+size_t	ft_strlen(const char *s);
 
-void	*ft_memmove(void *dest, const void *src, size_t n)
+int	main(void)
 {
-	unsigned char 		*d;
-	const unsigned char 	*s;
+	char	stra[] = "abcdef";
+	char	strb[] = "";
+	char	strc[] = "abcdef";
+	char	strd[] = "";
+	size_t	limit;
+	size_t	result;
 
-	d = (unsigned char *)dest;
-	s = (const unsigned char *)src;
-
-	if (d > s && s + n > d)
-		while (n--)
-		{
-			d[n] = s[n];
-		}
-	else
-		{
-			ft_memcpy(dest, src, n);
-		}
-	return (dest);
+	limit = 2;
+	printf("%zu\n%s\n", ft_strlcpy(strb, stra, limit), strb);
+	result = strlcpy(strd, strc, limit);
+	printf("%zu\n%s\n", result, strd);
+	return (0);
 }

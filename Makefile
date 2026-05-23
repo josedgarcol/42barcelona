@@ -6,7 +6,7 @@
 #    By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/30 17:25:12 by jcolque           #+#    #+#              #
-#    Updated: 2026/05/18 17:37:37 by jcolque          ###   ########.fr        #
+#    Updated: 2026/05/23 19:40:30 by jcolque          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ AR = ar rcs
 
 # SOURCES
 
-SRC = ft_isalpha ft_isdigit ft_isalnum ft_isascii ft_isprint ft_strlen ft_memset ft_bzero ft_memcpy ft_memmove
+SRC = ft_isalpha ft_isdigit ft_isalnum ft_isascii ft_isprint ft_strlen ft_memset ft_bzero ft_memcpy \
+      ft_memmove ft_strlcpy
 
 # OBJECTS
 

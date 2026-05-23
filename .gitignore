@@ -10,7 +10,6 @@ compile_flags.txt
 *.a
 *.out
 *.so
-main*.c
 
 # Archivos temporales
 *.swp

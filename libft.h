@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 16:45:19 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/18 17:38:27 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/05/23 19:40:37 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,5 @@ void	*ft_memset(void *ptr, int c, size_t len);
 void	ft_bzero(void *ptr, size_t len);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 void	*ft_memmove(void *dest, const void *src, size_t n);
-
+size_t	ft_strlcpy(char *dst, const char *src, size_t siz);
 #endif
