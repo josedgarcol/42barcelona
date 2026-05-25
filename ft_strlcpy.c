@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/23 13:56:17 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/23 19:58:52 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/05/25 14:00:52 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,19 @@
 
 size_t	ft_strlcpy(char *dst, const char *src, size_t siz)
 {
-	size_t	len;
 	size_t	i;
 
-	len = ft_strlen(src);
-	if (siz == 0)
-		return (len);
-	i = 0;
-	while (src[i] && i < siz - 1)
+	if (siz > 0)
 	{
-		dst[i] = src[i];
-		i++;
+		i = 0;
+		while (src[i] && i < (siz - 1))
+		{
+			dst[i] = src[i];
+			i++;
+		}
+		dst[i] = '\0';
 	}
-	dst[i] = '\0';
-	return (len);
+	return (ft_strlen(src));
 }
 
 /*size_t	ft_strlcpy(char *dst, const char *src, size_t siz)
