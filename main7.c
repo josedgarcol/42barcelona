@@ -6,16 +6,21 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/29 13:16:44 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/29 20:24:28 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/05/30 17:19:25 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "string.h"
 
-size_t	strlcat(char *dst, const char *src, size_t siz);
+//size_t	strlcat(char *dst, const char *src, size_t siz);
 
 int	main(void)
+{
+	printf("%d\n%c", ft_tolower('A'), ft_tolower('A'));
+}
+
+/*int	main(void)
 {
 	char		dst[5] = "hola";
 	const char	src[6] = "mundo";
@@ -26,7 +31,7 @@ int	main(void)
 	siz = 10;
 	printf("%zu\n%s\n", strlcat(dst, src, siz), dst);
 	printf("%zu\n%s\n", ft_strlcat(dst_b, src_b, siz), dst_b);
-}
+}*/
 
 
 /*{
