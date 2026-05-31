@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/29 13:16:44 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/31 18:44:07 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/05/31 19:57:24 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@
 
 int	main(void)
 {
+	printf("%d", ft_strncmp("abd", "abc", 3));
 	//const char	str[20] = "abcdef";
-
-	printf("%s", ft_strrchr("fabcdefa", 'f'));
+	//printf("%s", ft_strrchr("fabcdefa", 'f'));
 }
 
 

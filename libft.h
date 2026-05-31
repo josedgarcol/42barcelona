@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/28 16:45:19 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/31 18:42:22 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/05/31 19:54:24 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,6 @@ int	ft_toupper(int c);
 int	ft_tolower(int c);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strrchr(const char *s, int c);
+int	ft_strncmp(const char *s1, const char *s2, size_t);
 
 #endif
