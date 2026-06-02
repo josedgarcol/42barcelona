@@ -1,30 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memchr.c                                        :+:      :+:    :+:   */
+/*   ft_strnstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/31 20:28:01 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/01 13:57:53 by jcolque          ###   ########.fr       */
+/*   Created: 2026/06/01 14:30:10 by jcolque           #+#    #+#             */
+/*   Updated: 2026/06/01 18:07:47 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memchr(const void *s, int c, size_t n)
+char	*ft_strnstr(const char *big, const char *little, size_t len)
 {
-	unsigned char	*s_byte;
-	unsigned char	uc;
+	size_t	i;
+	size_t	j;
 
-	s_byte = (unsigned char *)s;
-	uc = (unsigned char)c;
-
-	while (n--)
+	if (!*little)
+		return ((char *)big);
+	i = 0;
+	while (big[i] && i < len)
 	{
-		if (*s_byte == uc)
-			return (s_byte);
-		s_byte++;
+		j = 0;
+		while (little[j] && i + j < len && big[i + j]
+				&& big[i + j] == little [j])
+		{
+			j++;
+		}
+		if (!little[j])
+			return ((char *)big + i);
+		i++;
 	}
 	return (NULL);
 }

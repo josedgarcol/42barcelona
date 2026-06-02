@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/29 13:16:44 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/31 19:57:24 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/01 14:05:34 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,19 @@
 
 int	main(void)
 {
+	char	str[11] = "hola\0mundo";
+	char	str_b[11] = "hola\0mundo";
+
+	printf("%s\n%s\n", (char *)ft_memchr(str, 'u', 11), str);
+	printf("%s\n%s\n", (char *)memchr(str_b, 'u', 11), str_b);
+}
+
+/*
+{
 	printf("%d", ft_strncmp("abd", "abc", 3));
 	//const char	str[20] = "abcdef";
 	//printf("%s", ft_strrchr("fabcdefa", 'f'));
-}
+}*/
 
 
 /*

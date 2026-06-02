@@ -1,30 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memchr.c                                        :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/31 20:28:01 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/01 13:57:53 by jcolque          ###   ########.fr       */
+/*   Created: 2026/06/02 18:36:59 by jcolque           #+#    #+#             */
+/*   Updated: 2026/06/02 19:53:02 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memchr(const void *s, int c, size_t n)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	unsigned char	*s_byte;
-	unsigned char	uc;
+	size_t	len_a;
+	size_t	len_b;
+	char	*joined;
 
-	s_byte = (unsigned char *)s;
-	uc = (unsigned char)c;
-
-	while (n--)
-	{
-		if (*s_byte == uc)
-			return (s_byte);
-		s_byte++;
-	}
-	return (NULL);
+	if (!s1 || !s2)
+		return (NULL);
+	len_a = ft_strlen(s1);
+	len_b = ft_strlen(s2);
+	joined = (char *)malloc(len_a + len_b + 1);
+	if (!joined)
+		return (NULL);
+	ft_memcpy(joined, s1, len_a);
+	ft_memcpy(joined + len_a, s2, len_b + 1);
+	return (joined);
 }

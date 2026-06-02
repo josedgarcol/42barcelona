@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memchr.c                                        :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/31 20:28:01 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/01 13:57:53 by jcolque          ###   ########.fr       */
+/*   Created: 2026/06/02 15:52:58 by jcolque           #+#    #+#             */
+/*   Updated: 2026/06/02 17:04:09 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memchr(const void *s, int c, size_t n)
+char	*ft_strdup(const char *s)
 {
-	unsigned char	*s_byte;
-	unsigned char	uc;
+	size_t	len;
+	char	*dup;
 
-	s_byte = (unsigned char *)s;
-	uc = (unsigned char)c;
-
-	while (n--)
-	{
-		if (*s_byte == uc)
-			return (s_byte);
-		s_byte++;
-	}
-	return (NULL);
+	len = ft_strlen(s);
+	dup = (char *)malloc(len + 1);
+	if (!dup)
+		return (NULL);
+	ft_memcpy(dup, s, len + 1);
+	return (dup);
 }
+
+/* hagan free() */
