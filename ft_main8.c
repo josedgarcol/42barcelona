@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 13:54:30 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/02 17:17:01 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/03 18:56:23 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,23 @@
 
 int	main(void)
 {
+	printf("ft_strchr(\"#\", '#') = %p\n", ft_strchr("#", '#'));
+	printf("ft_strchr(\"#\", 'a') = %p\n", ft_strchr("#", 'a'));
+	char	*s;
+
+	s = ft_strtrim("##hola##", "#");
+	printf("%s", s);
+	free(s);
+}
+
+
+
+
+
+
+
+
+/*
 	char	stra[] = "holamundo";
 	//char	stra[] = "";
 	char	*p;
@@ -27,7 +44,7 @@ int	main(void)
 	free((p);
 	printf("%s\n", p);
 }
-
+*/
 /*
 int	main(void)
 {
