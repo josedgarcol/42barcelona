@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/30 17:01:47 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/30 17:10:18 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/04 19:49:41 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_tolower(int c)
 {
-	if (c >= 'A' && c <='Z')
+	if (c >= 'A' && c <= 'Z')
 		return (c - ('A' - 'a'));
 	return (c);
 }

@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/31 20:28:01 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/01 13:57:53 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/04 19:32:50 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	*ft_memchr(const void *s, int c, size_t n)
 
 	s_byte = (unsigned char *)s;
 	uc = (unsigned char)c;
-
 	while (n--)
 	{
 		if (*s_byte == uc)

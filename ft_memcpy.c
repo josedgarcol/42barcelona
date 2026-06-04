@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/14 14:22:08 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/23 17:31:20 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/04 19:51:16 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 
 	d = (unsigned char *)dest;
 	s = (const unsigned char *)src;
-
 	if (!d && !s)
 		return (NULL);
 	if (dest == src)
@@ -42,8 +41,6 @@ int	main(void)
 	printf("%s\n", (char *)ft_memcpy(dest, 1 + src, 1));
 	return (0);
 }*/
-
-
 /*int	main(void)
 {
 	char	s[] = "sol";

@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/29 13:13:42 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/29 20:19:14 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/04 19:54:20 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ size_t	ft_strlcat(char *dst, const char *src, size_t siz)
 	dst_len = ft_strlen(dst);
 	src_len = ft_strlen(src);
 	if (siz <= dst_len)
-		return(siz + src_len);
+		return (siz + src_len);
 	i = 0;
-	while(src[i] && dst_len + i < siz - 1)
+	while (src[i] && dst_len + i < siz - 1)
 	{
 		dst[dst_len + i] = src[i];
 		i++;

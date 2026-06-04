@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/01 14:30:10 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/01 18:07:47 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/04 19:32:01 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 	{
 		j = 0;
 		while (little[j] && i + j < len && big[i + j]
-				&& big[i + j] == little [j])
+			&& big[i + j] == little [j])
 		{
 			j++;
 		}

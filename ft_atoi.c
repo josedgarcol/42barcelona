@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/01 16:42:49 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/02 14:01:13 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/04 19:31:21 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_atoi(const char *nptr)
 
 	sign = 1;
 	result = 0;
-	while((*nptr >= '\t' && *nptr <= '\r') || *nptr == ' ')
+	while ((*nptr >= '\t' && *nptr <= '\r') || *nptr == ' ')
 	{
 		nptr++;
 	}
