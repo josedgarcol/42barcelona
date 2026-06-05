@@ -6,25 +6,31 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/02 13:54:30 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/03 18:56:23 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/05 20:24:59 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "libft.h"
 
 //int	ft_atoi(const char *nptr);
+int	ft_nbrlen(long n);
+char	*ft_itoa(int n);
 
 int	main(void)
 {
-	printf("ft_strchr(\"#\", '#') = %p\n", ft_strchr("#", '#'));
-	printf("ft_strchr(\"#\", 'a') = %p\n", ft_strchr("#", 'a'));
-	char	*s;
+		long	n;
 
-	s = ft_strtrim("##hola##", "#");
-	printf("%s", s);
-	free(s);
+		n = ft_nbrlen(1234);
+		printf("%ld", n);
+
+		char	*s;
+		long		x;
+
+		x = -2147483647;
+
+		s = ft_itoa(x);
+		printf("\n%s", s);
 }
 
 

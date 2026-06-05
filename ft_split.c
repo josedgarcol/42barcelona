@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/03 20:14:41 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/04 18:57:06 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/05 13:51:38 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ size_t	counter_words(const char *s, char c)
 	return (words);
 }
 
-char	**word_allocator(char const *s, char c, char **str_array)
+char	**fill_array(char const *s, char c, char **str_array)
 {
 	size_t	i;
 	size_t	str_len;
@@ -69,7 +69,7 @@ char	**ft_split(char const *s, char c)
 	str_array[words] = NULL;
 	if (words == 0)
 		return (str_array);
-	if (!word_allocator(s, c, str_array))
+	if (!fill_array(s, c, str_array))
 		return (NULL);
 	return (str_array);
 }
