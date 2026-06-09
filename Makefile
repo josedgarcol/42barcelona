@@ -6,7 +6,7 @@
 #    By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/30 17:25:12 by jcolque           #+#    #+#              #
-#    Updated: 2026/06/05 20:25:49 by jcolque          ###   ########.fr        #
+#    Updated: 2026/06/07 08:58:52 by jcolque          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ HEADER = libft.h
 # COMPILER AND FLAGS
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 AR = ar rcs
 
 # SOURCES
@@ -23,8 +23,8 @@ AR = ar rcs
 SRC = ft_isalpha ft_isdigit ft_isalnum ft_isascii ft_isprint ft_strlen ft_memset ft_bzero ft_memcpy \
       ft_memmove ft_strlcpy ft_strlcat ft_toupper ft_tolower ft_strchr ft_strrchr ft_strncmp \
       ft_memchr ft_memcmp ft_strnstr ft_atoi ft_calloc ft_strdup ft_substr ft_strjoin ft_strtrim ft_split \
-	  ft_itoa
-
+      ft_itoa ft_strmapi ft_striteri ft_putchar_fd ft_putstr_fd ft_putendl_fd ft_putnbr_fd \
+      ft_lstnew ft_lstadd_front ft_lstsize ft_lstlast ft_lstadd_back ft_lstdelone ft_lstclear ft_lstiter ft_lstmap
 
 # OBJECTS
 
@@ -67,7 +67,7 @@ $(NAME): $(OBJS)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@if ls *.o 2>/dev/null | grep -q .; then \
+	@if [ -n "$(wildcard *.o)" ]; then \
 		rm -f $(OBJS); \
 		echo "$(RED)✗ Objects removed.$(RESET)"; \
 	else \

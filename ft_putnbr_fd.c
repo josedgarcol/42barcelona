@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main3.c                                            :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/15 14:29:03 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/16 14:55:38 by jcolque          ###   ########.fr       */
+/*   Created: 2026/06/06 16:46:59 by jcolque           #+#    #+#             */
+/*   Updated: 2026/06/06 17:23:15 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <string.h>
 
-int	main(void)
+void	ft_putnbr_fd(int n, int fd)
 {
-	char	src[] = "abcdef";
-	char	dest[7];
-	char	*s;
+	long	nb;
 
-	s = memcpy(dest, 4 + src, 2);
-	printf("%s\n", s);
-	memcpy(dest, 4 + src, 2);
-	printf("%s\n", dest);
-	
-	printf("%s\n", (char *)memcpy(dest, 4 + src, 2));
-	
+	nb = (long)n;
+	if (nb < 0)
+	{
+		ft_putchar_fd('-', fd);
+		nb = -nb;
+	}
+	if (nb >= 10)
+		ft_putnbr_fd(nb / 10, fd);
+	ft_putchar_fd((nb % 10) + '0', fd);
 }

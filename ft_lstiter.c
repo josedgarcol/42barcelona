@@ -1,18 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   ft_lstiter.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/12 19:08:10 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/07 15:15:35 by jcolque          ###   ########.fr       */
+/*   Created: 2026/06/07 04:46:41 by jcolque           #+#    #+#             */
+/*   Updated: 2026/06/07 04:48:01 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_bzero(void *ptr, size_t len)
+void	ft_lstiter(t_list *lst, void (*f)(void *))
 {
-	ft_memset(ptr, 0, len);
+	if (!lst || !f)
+		return ;
+	while (lst)
+	{
+		f(lst->content);
+		lst = lst->next;
+	}
 }

@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/21 15:05:10 by jcolque           #+#    #+#             */
-/*   Updated: 2026/05/21 15:10:58 by jcolque          ###   ########.fr       */
+/*   Created: 2026/06/07 04:32:04 by jcolque           #+#    #+#             */
+/*   Updated: 2026/06/07 04:41:24 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../libft/libft.h"
+#include "libft.h"
 
-void	*ft_memcpy(void	*dest, const void *src, size_t n)
+void	ft_lstadd_back(t_list **lst, t_list *new)
 {
-	unsigned char		*d;
-	const unsigned char 	*s;
+	t_list	*last;
 
-	d = (unsigned char *)dest;
-	s = (const unsigned char *)src;
-
-	while(n--)
+	if (!lst || !new)
+		return ;
+	if (!*lst)
 	{
-		*d++ = *s++;
+		*lst = new;
+		return ;
 	}
-	return (dest);
+	last = ft_lstlast(*lst);
+	last->next = new;
 }
