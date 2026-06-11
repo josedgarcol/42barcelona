@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 16:02:10 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/09 18:16:45 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/11 20:38:26 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,14 @@
 # include <stdarg.h>
 # include "libft/libft.h"
 
-typedef	int	(*t_print_func)(va_list);
+int	ft_printf(const char *s, ...);
 
-typedef
-
-int	ft_printf(const char *format, ...);
+int	print_char(va_list args);
+int	print_str(va_list args);
+int	print_int(va_list args);
+int	print_uint(va_list args);
+int	print_hex(va_list args, int uppercase);
+int	print_ptr(va_list args);
+int	print_percent(void);
 
 #endif

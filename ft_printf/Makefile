@@ -6,7 +6,7 @@
 #    By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/06/09 15:01:59 by jcolque           #+#    #+#              #
-#    Updated: 2026/06/09 17:10:03 by jcolque          ###   ########.fr        #
+#    Updated: 2026/06/11 20:33:29 by jcolque          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ CC	  = cc
 CFLAGS	  = -Wall -Wextra -Werror
 AR	  = ar rcs
 
-PRINTF_SRC  = ft_printf #ft_printf_utils ft_printf_hex ft_printf_ptr ft_printf_nbr
+PRINTF_SRC  = ft_printf ft_printf_chars ft_printf_numbers ft_printf_hex
 PRINTF_SRCS = $(addsuffix .c, $(PRINTF_SRC))
 PRINTF_OBJS = $(addsuffix .o, $(PRINTF_SRC))
 
