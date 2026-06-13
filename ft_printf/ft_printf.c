@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 15:59:14 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/11 20:39:20 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/13 13:34:15 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,28 +40,40 @@ static int	handle_conversion(char spec, va_list args)
 	return (0);
 }
 
+static int	ft_handle_char(const char *s, int *i, va_list args)
+{
+	int	ret;
+
+	if (s[*i] == '%' && s[*i + 1])
+	{
+		(*i)++;
+		ret = handle_conversion(s[*i], args);
+		(*i)++;
+	}
+	else
+	{
+		ret = ft_putchar_count(s[*i]);
+		(*i)++;
+	}
+	return (ret);
+}
+
 int	ft_printf(const char *s, ...)
 {
 	va_list	args;
 	int		count;
 	int		i;
+	int		ret;
 
-	va_start (args, s);
+	va_start(args, s);
 	count = 0;
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] == '%' && s[i + 1])
-		{
-			i++;
-			count += handle_conversion(s[i], args);
-			i++;
-		}
-		else
-		{
-			count += ft_putchar_count(s[i]);
-			i++;
-		}
+		ret = ft_handle_char(s, &i, args);
+		if (ret == -1)
+			return (va_end(args), -1);
+		count += ret;
 	}
 	va_end(args);
 	return (count);

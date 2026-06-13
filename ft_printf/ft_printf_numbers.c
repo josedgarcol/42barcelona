@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 17:06:47 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/11 20:52:03 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/13 11:49:45 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,10 @@ int	print_int(va_list args)
 
 int	print_uint(va_list args)
 {
-	char	*str;
 	unsigned int	u;
-	int		len;
-	int		ret;
+	char			*str;
+	int				len;
+	int				ret;
 
 	u = va_arg(args, unsigned int);
 	str = ft_utoa(u);

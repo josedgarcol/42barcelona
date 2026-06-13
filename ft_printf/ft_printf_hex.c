@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 18:08:31 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/11 20:37:05 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/13 14:20:54 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	ft_put_hex(unsigned int n, int uppercase)
 	return (8 - i);
 }
 
-static int	ft_put_ptr_hex(unsigned long n)
+static int	ft_putptr_hex(unsigned long n)
 {
 	char	*digits;
 	char	buf[17];
@@ -77,6 +77,7 @@ int	print_ptr(va_list args)
 {
 	void	*ptr;
 	int		ret;
+	int		len;
 
 	ptr = va_arg(args, void *);
 	if (!ptr)
@@ -89,5 +90,8 @@ int	print_ptr(va_list args)
 	ret = write(1, "0x", 2);
 	if (ret == -1)
 		return (-1);
-	return (2 + ft_put_ptr_hex((unsigned long)ptr));
+	len = ft_putptr_hex((unsigned long)ptr);
+	if (len == -1)
+		return (-1);
+	return (2 + len);
 }

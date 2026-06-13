@@ -33,28 +33,40 @@ static int	handle_conversion(char spec, va_list args)
 	return (0);
 }
 
+static int	ft_handle_char(const char *s, int *i, va_list args)
+{
+	int	ret;
+
+	if (s[*i] == '%' && s[*i + 1])
+	{
+		(*i)++;
+		ret = handle_conversion(s[*i], args);
+		(*i)++;
+	}
+	else
+	{
+		ret = ft_putchar_count(s[*i]);
+		(*i)++;
+	}
+	return (ret);
+}
+
 int	ft_printf(const char *s, ...)
 {
 	va_list	args;
 	int		count;
 	int		i;
+	int		ret;
 
-	va_start (args, s);
+	va_start(args, s);
 	count = 0;
 	i = 0;
 	while (s[i])
 	{
-		if (s[i] == '%' && s[i + 1])
-		{
-			i++;
-			count += handle_conversion(s[i], args);
-			i++;
-		}
-		else
-		{
-			count += ft_putchar_count(s[i]);
-			i++;
-		}
+		ret = ft_handle_char(s, &i, args);
+		if (ret == -1)
+			return (va_end(args), -1);
+		count += ret;
 	}
 	va_end(args);
 	return (count);
@@ -133,7 +145,7 @@ static int	ft_put_hex(unsigned int n, int uppercase)
 	return (8 - i);
 }
 
-static int	ft_put_ptr_hex(unsigned long n)
+static int	ft_putptr_hex(unsigned long n)
 {
 	char	*digits;
 	char	buf[17];
@@ -170,6 +182,7 @@ int	print_ptr(va_list args)
 {
 	void	*ptr;
 	int		ret;
+	int		len;
 
 	ptr = va_arg(args, void *);
 	if (!ptr)
@@ -182,7 +195,10 @@ int	print_ptr(va_list args)
 	ret = write(1, "0x", 2);
 	if (ret == -1)
 		return (-1);
-	return (2 + ft_put_ptr_hex((unsigned long)ptr));
+	len = ft_putptr_hex((unsigned long)ptr);
+	if (len == -1)
+		return (-1);
+	return (2 + len);
 }
 
 ========================================
@@ -248,10 +264,10 @@ int	print_int(va_list args)
 
 int	print_uint(va_list args)
 {
-	char	*str;
 	unsigned int	u;
-	int		len;
-	int		ret;
+	char			*str;
+	int				len;
+	int				ret;
 
 	u = va_arg(args, unsigned int);
 	str = ft_utoa(u);
