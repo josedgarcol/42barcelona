@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf_hex.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcolque <jcolque@student.42barcelona.      +#+  +:+       +#+        */
+/*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 18:08:31 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/13 14:20:54 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/14 16:45:12 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
