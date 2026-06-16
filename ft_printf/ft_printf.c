@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/09 15:59:14 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/13 13:34:15 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/16 17:35:49 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,19 @@ static int	ft_putchar_count(char c)
 	if (write(1, &c, 1) == -1)
 		return (-1);
 	return (1);
+}
+
+static int	print_unsopported(char spec)
+{
+	int	ret;
+
+	ret = ft_putchar_count('%');
+	if (ret == -1)
+		return (-1);
+	ret = ft_putchar_count(spec);
+	if (ret == -1)
+		return (-1);
+	return (2);
 }
 
 static int	handle_conversion(char spec, va_list args)
@@ -37,7 +50,7 @@ static int	handle_conversion(char spec, va_list args)
 		return (print_ptr(args));
 	if (spec == '%')
 		return (print_percent());
-	return (0);
+	return (print_unsopported(spec));
 }
 
 static int	ft_handle_char(const char *s, int *i, va_list args)
@@ -65,6 +78,8 @@ int	ft_printf(const char *s, ...)
 	int		i;
 	int		ret;
 
+	if (!s)
+		return (-1);
 	va_start(args, s);
 	count = 0;
 	i = 0;

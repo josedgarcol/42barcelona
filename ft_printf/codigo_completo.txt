@@ -1,0 +1,576 @@
+
+========================================
+FILE: ft_printf.c
+========================================
+
+#include "ft_printf.h"
+
+static int	ft_putchar_count(char c)
+{
+	if (write(1, &c, 1) == -1)
+		return (-1);
+	return (1);
+}
+
+static int	print_unsopported(char spec)
+{
+	int	ret;
+
+	ret = ft_putchar_count('%');
+	if (ret == -1)
+		return (-1);
+	ret = ft_putchar_count(spec);
+	if (ret == -1)
+		return (-1);
+	return (2);
+}
+
+static int	handle_conversion(char spec, va_list args)
+{
+	if (spec == 'c')
+		return (print_char(args));
+	if (spec == 's')
+		return (print_str(args));
+	if (spec == 'd' || spec == 'i')
+		return (print_int(args));
+	if (spec == 'u')
+		return (print_uint(args));
+	if (spec == 'x')
+		return (print_hex(args, 0));
+	if (spec == 'X')
+		return (print_hex(args, 1));
+	if (spec == 'p')
+		return (print_ptr(args));
+	if (spec == '%')
+		return (print_percent());
+	return (print_unsopported(spec));
+}
+
+static int	ft_handle_char(const char *s, int *i, va_list args)
+{
+	int	ret;
+
+	if (s[*i] == '%' && s[*i + 1])
+	{
+		(*i)++;
+		ret = handle_conversion(s[*i], args);
+		(*i)++;
+	}
+	else
+	{
+		ret = ft_putchar_count(s[*i]);
+		(*i)++;
+	}
+	return (ret);
+}
+
+int	ft_printf(const char *s, ...)
+{
+	va_list	args;
+	int		count;
+	int		i;
+	int		ret;
+
+	if (!s)
+		return (-1);
+	va_start(args, s);
+	count = 0;
+	i = 0;
+	while (s[i])
+	{
+		ret = ft_handle_char(s, &i, args);
+		if (ret == -1)
+			return (va_end(args), -1);
+		count += ret;
+	}
+	va_end(args);
+	return (count);
+}
+
+========================================
+FILE: ft_printf_chars.c
+========================================
+
+#include "ft_printf.h"
+
+int	print_char(va_list args)
+{
+	char	c;
+	int		ret;
+
+	c = (char)va_arg(args, int);
+	ret = write(1, &c, 1);
+	if (ret == -1)
+		return (-1);
+	return (1);
+}
+
+int	print_str(va_list args)
+{
+	char	*s;
+	int		len;
+
+	s = va_arg(args, char *);
+	if (!s)
+		s = "(null)";
+	len = ft_strlen(s);
+	if (write(1, s, len) == -1)
+		return (-1);
+	return (len);
+}
+
+int	print_percent(void)
+{
+	if (write(1, "%", 1) == -1)
+		return (-1);
+	return (1);
+}
+
+========================================
+FILE: ft_printf_hex.c
+========================================
+
+#include "ft_printf.h"
+
+static int	ft_put_hex(unsigned int n, int uppercase)
+{
+	char	*digits;
+	char	buf[9];
+	int		i;
+
+	if (uppercase)
+		digits = "0123456789ABCDEF";
+	else
+		digits = "0123456789abcdef";
+	if (n == 0)
+	{
+		if (write(1, "0", 1) == -1)
+			return (-1);
+		return (1);
+	}
+	i = 8;
+	buf[8] = '\0';
+	while (n)
+	{
+		buf[--i] = digits[n % 16];
+		n /= 16;
+	}
+	if (write(1, buf + i, 8 - i) == -1)
+		return (-1);
+	return (8 - i);
+}
+
+static int	ft_putptr_hex(unsigned long n)
+{
+	char	*digits;
+	char	buf[17];
+	int		i;
+
+	digits = "0123456789abcdef";
+	if (n == 0)
+	{
+		if (write(1, "0", 1) == -1)
+			return (-1);
+		return (1);
+	}
+	i = 16;
+	buf[16] = '\0';
+	while (n)
+	{
+		buf[--i] = digits[n % 16];
+		n /= 16;
+	}
+	if (write(1, buf + i, 16 - i) == -1)
+		return (-1);
+	return (16 - i);
+}
+
+int	print_hex(va_list args, int uppercase)
+{
+	unsigned int	n;
+
+	n = va_arg(args, unsigned int);
+	return (ft_put_hex(n, uppercase));
+}
+
+int	print_ptr(va_list args)
+{
+	void	*ptr;
+	int		ret;
+	int		len;
+
+	ptr = va_arg(args, void *);
+	if (!ptr)
+	{
+		ret = write(1, "(nil)", 5);
+		if (ret == -1)
+			return (-1);
+		return (5);
+	}
+	ret = write(1, "0x", 2);
+	if (ret == -1)
+		return (-1);
+	len = ft_putptr_hex((unsigned long)ptr);
+	if (len == -1)
+		return (-1);
+	return (2 + len);
+}
+
+========================================
+FILE: ft_printf_numbers.c
+========================================
+
+#include "ft_printf.h"
+
+static int	ft_unbrlen(unsigned int n)
+{
+	int	len;
+
+	len = (n == 0);
+	while (n)
+	{
+		n /= 10;
+		len++;
+	}
+	return (len);
+}
+
+static char	*ft_utoa(unsigned int n)
+{
+	char	*str;
+	int		len;
+
+	len = ft_unbrlen(n);
+	str = (char *)malloc(sizeof(char) * (len + 1));
+	if (!str)
+		return (NULL);
+	str[len] = '\0';
+	if (n == 0)
+		str[0] = '0';
+	else
+	{
+		while (n)
+		{
+			str[--len] = (n % 10) + '0';
+			n /= 10;
+		}
+	}
+	return (str);
+}
+
+int	print_int(va_list args)
+{
+	int		n;
+	char	*str;
+	int		len;
+	int		ret;
+
+	n = va_arg(args, int);
+	str = ft_itoa(n);
+	if (!str)
+		return (-1);
+	len = ft_strlen(str);
+	ret = write(1, str, len);
+	free (str);
+	if (ret == -1)
+		return (-1);
+	return (len);
+}
+
+int	print_uint(va_list args)
+{
+	unsigned int	u;
+	char			*str;
+	int				len;
+	int				ret;
+
+	u = va_arg(args, unsigned int);
+	str = ft_utoa(u);
+	if (!str)
+		return (-1);
+	len = ft_strlen(str);
+	ret = write(1, str, len);
+	free (str);
+	if (ret == -1)
+		return (-1);
+	return (len);
+}
+
+========================================
+FILE: main2.c
+========================================
+
+#include "ft_printf.h"
+#include <stdio.h>
+
+int main(void)
+{
+    int ret;
+
+    ret = ft_printf("%z");
+    printf("%d\n", ret);
+    return (0);
+}
+
+
+/*{
+	int	ret_ft;
+	//int	ret_orig;
+	ret_ft = ft_printf("");
+	printf("%d\n", ret_ft);
+	//ret_ft = ft_printf(NULL);
+	//ret_orig = printf(NULL);
+	//printf("r_ft: %d\n", ret_ft);
+	return (0);
+}*/
+
+========================================
+FILE: main.c
+========================================
+
+#include "ft_printf.h"
+#include <stdio.h>
+#include <limits.h>
+#include <unistd.h>
+
+int	main(void)
+{
+	int		fd;
+	void	*null_ptr;
+	char	*null_str;
+	int		x;
+
+	null_ptr = NULL;
+	null_str = NULL;
+	x = 42;
+
+	printf("pf:  [%c]\n", 'A');
+	ft_printf("ft:  [%c]\n", 'A');
+	printf("pf:  [%c]\n", '\0');
+	ft_printf("ft:  [%c]\n", '\0');
+
+	printf("pf:  [%s]\n", "hola mundo");
+	ft_printf("ft:  [%s]\n", "hola mundo");
+	printf("pf:  [%s]\n", "");
+	ft_printf("ft:  [%s]\n", "");
+
+	printf("pf:  [%s]\n", null_str);
+	ft_printf("ft:  [%s]\n", null_str);
+
+	printf("pf:  [%d]\n", 0);
+	ft_printf("ft:  [%d]\n", 0);
+	printf("pf:  [%d]\n", 42);
+	ft_printf("ft:  [%d]\n", 42);
+	printf("pf:  [%d]\n", -42);
+	ft_printf("ft:  [%d]\n", -42);
+	printf("pf:  [%d]\n", INT_MAX);
+	ft_printf("ft:  [%d]\n", INT_MAX);
+	printf("pf:  [%d]\n", INT_MIN);
+	ft_printf("ft:  [%d]\n", INT_MIN);
+	printf("pf:  [%i]\n", -1);
+	ft_printf("ft:  [%i]\n", -1);
+
+	printf("pf:  [%u]\n", 0U);
+	ft_printf("ft:  [%u]\n", 0U);
+	printf("pf:  [%u]\n", UINT_MAX);
+	ft_printf("ft:  [%u]\n", UINT_MAX);
+	printf("pf:  [%u]\n", 2147483648U);
+	ft_printf("ft:  [%u]\n", 2147483648U);
+	printf("pf:  [%u]\n", (unsigned int)-1);
+	ft_printf("ft:  [%u]\n", (unsigned int)-1);
+
+	printf("pf:  [%x]\n", 0);
+	ft_printf("ft:  [%x]\n", 0);
+	printf("pf:  [%x]\n", 255);
+	ft_printf("ft:  [%x]\n", 255);
+	printf("pf:  [%x]\n", UINT_MAX);
+	ft_printf("ft:  [%x]\n", UINT_MAX);
+	printf("pf:  [%X]\n", 0xABC);
+	ft_printf("ft:  [%X]\n", 0xABC);
+	printf("pf:  [%X]\n", UINT_MAX);
+	ft_printf("ft:  [%X]\n", UINT_MAX);
+
+	printf("pf:  [%p]\n", (void *)&x);
+	ft_printf("ft:  [%p]\n", (void *)&x);
+
+	printf("pf:  [%p]\n", null_ptr);
+	ft_printf("ft:  [%p]\n", null_ptr);
+
+	printf("pf:  [%%]\n");
+	ft_printf("ft:  [%%]\n");
+
+	printf("pf:  %s=%d hex=%x ptr=%p\n", "val", -99, 255, (void *)&x);
+	ft_printf("ft:  %s=%d hex=%x ptr=%p\n", "val", -99, 255, (void *)&x);
+	printf("pf:  [%c][%s][%d][%u][%x][%X][%%]\n", 'Z', "ok", -1, 99U, 16, 255);
+	ft_printf("ft:  [%c][%s][%d][%u][%x][%X][%%]\n", 'Z', "ok", -1, 99U, 16, 255);
+
+	fd = dup(1);
+	close(1);
+	ft_printf("esto no se imprime");
+	dup2(fd, 1);
+	close(fd);
+	if (fd == -1)
+		printf("ft_printf con stdout cerrado: \033[32m-1 ✓\033[0m\n");
+	else
+		printf("ft_printf con stdout cerrado: \033[31m-1 ✗\033[0m\n");
+
+	ft_printf("%.0s", NULL);
+	//printf("%.0s", NULL);
+	return (0);
+}
+/*
+{
+    unsigned int max = 4294967295U;
+    unsigned int min = 0U;
+    unsigned int medio = 2147483648U;  // 2^31, justo el límite de int con signo
+
+    ft_printf("Máximo: %u\n", max);
+    printf("Máximo: %u\n", max);
+
+    ft_printf("Mínimo: %u\n", min);
+    printf("Mínimo: %u\n", min);
+
+    ft_printf("Medio: %u\n", medio);
+    printf("Medio: %u\n", medio);
+
+    // También prueba con un número negativo convertido a unsigned
+    int negativo = -1;
+    ft_printf("-1 como unsigned: %u\n", (unsigned int)negativo);
+    printf("-1 como unsigned: %u\n", (unsigned int)negativo);
+
+    unsigned int	num = 123;
+    unsigned int	num2 = 0xABC;
+    int	x = 42;
+    void *ptr = &x;
+
+    ft_printf("%x\n", num);
+    printf("%x\n", num);
+
+    ft_printf("%X\n", num2);
+    printf("%X\n", num2);
+
+    ft_printf("%p\n", ptr);
+    printf("%p\n", ptr);
+
+    ft_printf("Hola %s, %d, %x, %p, %%\n", "mundo", 42, 255, ptr);
+    printf("Hola %s, %d, %x, %p, %%\n", "mundo", 42, 255, ptr);
+    printf("\n");
+    ft_printf("%%");
+    printf("%%");
+
+
+    return (0);
+}*/
+
+========================================
+FILE: ft_printf.h
+========================================
+
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
+
+# include <unistd.h>
+# include <stdarg.h>
+# include "libft/libft.h"
+
+int	ft_printf(const char *s, ...);
+
+int	print_char(va_list args);
+int	print_str(va_list args);
+int	print_int(va_list args);
+int	print_uint(va_list args);
+int	print_hex(va_list args, int uppercase);
+int	print_ptr(va_list args);
+int	print_percent(void);
+
+#endif
+
+========================================
+FILE: Makefile
+========================================
+
+MAKEFLAGS += --no-print-directory
+
+NAME = libftprintf.a
+
+HEADER = ft_printf.h
+
+# Directory | 
+
+LIBFT_DIR = libft
+LIBFT     = $(LIBFT_DIR)/libft.a
+
+# Compile and flags
+
+CC	  = cc
+CFLAGS	  = -Wall -Wextra -Werror
+AR	  = ar rcs
+
+PRINTF_SRC  = ft_printf ft_printf_chars ft_printf_numbers ft_printf_hex
+PRINTF_SRCS = $(addsuffix .c, $(PRINTF_SRC))
+PRINTF_OBJS = $(addsuffix .o, $(PRINTF_SRC))
+
+
+# Styles
+
+RED     = $(shell printf "\33[31m")
+GREEN   = $(shell printf "\33[32m")
+YELLOW  = $(shell printf "\33[33m")
+BLUE    = $(shell printf "\33[34m")
+PURPLE  = $(shell printf "\33[35m")
+GRAY    = $(shell printf "\33[90m")
+RESET   = $(shell printf "\33[0m")
+
+# Progress Bar
+
+TOTAL	= $(words $(PRINTF_OBJS))
+CURRENT = 0
+
+define progress
+	$(eval CURRENT = $(shell echo $$(($(CURRENT) + 1))))
+	$(eval PERCENT = $(shell echo $$(($(CURRENT) * 100 / $(TOTAL)))))
+	$(eval FILLED  = $(shell echo $$(($(CURRENT) * 20 / $(TOTAL)))))
+	$(eval EMPTY   = $(shell echo $$((20 - $(FILLED)))))
+	@printf "\r$(BLUE)[$(GREEN)" ; \
+	for i in $$(seq 1 $(FILLED)); do printf "█"; done ; \
+	printf "$(GRAY)" ; \
+	for i in $$(seq 1 $(EMPTY)); do printf "░"; done ; \
+	printf "$(BLUE)] $(YELLOW)%d%% $(RESET)$(BLUE)compiling $(RESET)$<   \033[K" $(PERCENT)
+endef
+# Rule
+
+all: $(NAME)
+
+$(NAME): $(LIBFT) $(PRINTF_OBJS)
+	@printf "\n\n"
+	@cp $(LIBFT) $(NAME)
+	@$(AR) $(NAME) $(PRINTF_OBJS)
+	@echo "$(GREEN)✓ $(NAME) created successfully.$(RESET)"
+	@echo
+
+# Compile libft
+$(LIBFT):
+	+@make -C $(LIBFT_DIR)
+
+# Compilación de cada fuente de ft_printf
+%.o: %.c $(HEADER) Makefile
+	$(call progress)
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo ""
+
+# Clean
+clean:
+	@rm -f $(PRINTF_OBJS)
+	@make clean -C $(LIBFT_DIR)
+	@echo "$(RED)✗ Objects removed.$(RESET)"
+
+fclean:
+	@rm -f $(NAME) $(PRINTF_OBJS)
+	@make fclean -C $(LIBFT_DIR)
+	@echo "$(RED)✗ Objects and $(NAME) removed.$(RESET)"
+
+re:
+	@$(MAKE) fclean
+	@$(MAKE) all
+
+.PHONY: all clean fclean re
