@@ -6,11 +6,12 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 11:32:07 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/20 20:43:47 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/23 17:59:53 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 static char	*read_and_stash(int fd, char *stash)
 {
@@ -18,24 +19,24 @@ static char	*read_and_stash(int fd, char *stash)
 	char	*tmp;
 	int		bytes_read;
 
-	buffer = malloc(BUFFER_SIZE + 1);
-	if (!buffer)
-		return (NULL);
+	buffer = NULL;
 	bytes_read = 1;
 	while (!ft_strchr(stash, '\n') && bytes_read > 0)
 	{
+		buffer = malloc(BUFFER_SIZE + 1);
+		if (!buffer)
+			return (free(stash), NULL);
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
-		{
-			free(buffer);
-			return (NULL);
-		}
+			return (free(buffer), free(stash), NULL);
 		buffer[bytes_read] = '\0';
 		tmp = ft_strjoin(stash, buffer);
+		free(buffer);
 		free(stash);
+		if (!tmp)
+			return (NULL);
 		stash = tmp;
 	}
-	free(buffer);
 	return (stash);
 }
 
@@ -45,7 +46,7 @@ static char	*extract_line(char *stash)
 	int		i;
 
 	i = 0;
-	while (stash [i] && stash[i] != '\n')
+	while (stash[i] && stash[i] != '\n')
 		i++;
 	if (stash[i] == '\n')
 		i++;
@@ -53,10 +54,10 @@ static char	*extract_line(char *stash)
 	return (line);
 }
 
-static char *update_stash(char *stash)
+static char	*update_stash(char *stash)
 {
 	char	*new_stash;
-	int	i;
+	int		i;
 
 	i = 0;
 	while (stash[i] && stash[i] != '\n')

@@ -1,0 +1,374 @@
+
+========================================
+FILE: get_next_line.c
+========================================
+
+#include "get_next_line.h"
+#include <stdio.h>
+
+static char	*read_and_stash(int fd, char *stash)
+{
+	char	*buffer;
+	char	*tmp;
+	int		bytes_read;
+
+	buffer = NULL;
+	bytes_read = 1;
+	while (!ft_strchr(stash, '\n') && bytes_read > 0)
+	{
+		buffer = malloc(BUFFER_SIZE + 1);
+		if (!buffer)
+			return (free(stash), NULL);
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read < 0)
+			return (free(buffer), free(stash), NULL);
+		buffer[bytes_read] = '\0';
+		tmp = ft_strjoin(stash, buffer);
+		free(buffer);
+		free(stash);
+		if (!tmp)
+			return (NULL);
+		stash = tmp;
+	}
+	return (stash);
+}
+
+static char	*extract_line(char *stash)
+{
+	char	*line;
+	int		i;
+
+	i = 0;
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (stash[i] == '\n')
+		i++;
+	line = ft_substr(stash, 0, i);
+	return (line);
+}
+
+static char	*update_stash(char *stash)
+{
+	char	*new_stash;
+	int		i;
+
+	i = 0;
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (stash[i] == '\n')
+		i++;
+	new_stash = ft_substr(stash, i, ft_strlen(stash) - i);
+	free(stash);
+	return (new_stash);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*stash;
+	char		*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	stash = read_and_stash(fd, stash);
+	if (!stash || !stash[0])
+	{
+		free(stash);
+		stash = NULL;
+		return (NULL);
+	}
+	line = extract_line(stash);
+	stash = update_stash(stash);
+	return (line);
+}
+
+========================================
+FILE: get_next_line_utils_bonus.c
+========================================
+
+#include "get_next_line.h"
+
+size_t	ft_strlen(const char *s)
+{
+	const char	*p;
+
+	p = s;
+	while (*p)
+		p++;
+	return (p - s);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	if (!s)
+		return (NULL);
+	while (*s)
+	{
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
+	}
+	if ((char)c == '\0')
+		return ((char *)s);
+	return (NULL);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*dup;
+	char	*p;
+
+	if (!s)
+		return (NULL);
+	dup = malloc(ft_strlen(s) + 1);
+	if (!dup)
+		return (NULL);
+	p = dup;
+	while (*s)
+		*p++ = *s++;
+	*p = '\0';
+	return (dup);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*joined;
+	char	*p;
+
+	if (!s1 && !s2)
+		return (NULL);
+	if (!s1)
+		return (ft_strdup(s2));
+	if (!s2)
+		return (ft_strdup(s1));
+	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!joined)
+		return (NULL);
+	p = joined;
+	while (*s1)
+		*p++ = *s1++;
+	while (*s2)
+		*p++ = *s2++;
+	*p = '\0';
+	return (joined);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t	s_len;
+	size_t	i;
+	char	*new_s;
+
+	if (!s)
+		return (NULL);
+	s_len = ft_strlen(s);
+	if (start >= s_len)
+		return (ft_strdup(""));
+	if (len <= s_len - start)
+		new_s = malloc(len + 1);
+	else
+		new_s = malloc((s_len - start) + 1);
+	if (!new_s)
+		return (NULL);
+	i = 0;
+	while (s[start + i] && i < len)
+	{
+		new_s[i] = s[start + i];
+		i++;
+	}
+	new_s[i] = '\0';
+	return (new_s);
+}
+
+t_list	*find_node(t_list *lst, int fd);
+t_list	*new_node(int fd);
+void	delete_node(t_list **lst, int fd);
+
+========================================
+FILE: get_next_line_utils.c
+========================================
+
+#include "get_next_line.h"
+
+size_t	ft_strlen(const char *s)
+{
+	const char	*p;
+
+	p = s;
+	while (*p)
+		p++;
+	return (p - s);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	if (!s)
+		return (NULL);
+	while (*s)
+	{
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
+	}
+	if ((char)c == '\0')
+		return ((char *)s);
+	return (NULL);
+}
+
+char	*ft_strdup(const char *s)
+{
+	char	*dup;
+	char	*p;
+
+	if (!s)
+		return (NULL);
+	dup = malloc(ft_strlen(s) + 1);
+	if (!dup)
+		return (NULL);
+	p = dup;
+	while (*s)
+		*p++ = *s++;
+	*p = '\0';
+	return (dup);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*joined;
+	char	*p;
+
+	if (!s1 && !s2)
+		return (NULL);
+	if (!s1)
+		return (ft_strdup(s2));
+	if (!s2)
+		return (ft_strdup(s1));
+	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!joined)
+		return (NULL);
+	p = joined;
+	while (*s1)
+		*p++ = *s1++;
+	while (*s2)
+		*p++ = *s2++;
+	*p = '\0';
+	return (joined);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t	s_len;
+	size_t	i;
+	char	*new_s;
+
+	if (!s)
+		return (NULL);
+	s_len = ft_strlen(s);
+	if (start >= s_len)
+		return (ft_strdup(""));
+	if (len <= s_len - start)
+		new_s = malloc(len + 1);
+	else
+		new_s = malloc((s_len - start) + 1);
+	if (!new_s)
+		return (NULL);
+	i = 0;
+	while (s[start + i] && i < len)
+	{
+		new_s[i] = s[start + i];
+		i++;
+	}
+	new_s[i] = '\0';
+	return (new_s);
+}
+
+========================================
+FILE: main.c
+========================================
+
+		return (1);
+	}
+
+	fd = open(argv[1], O_RDONLY);
+	if (fd < 0)
+	{
+		perror("Error al abrir el archivo");
+		return (1);
+	}
+
+	printf("--- Contenido de %s ---\n", argv[1]);
+	while ((line = get_next_line(fd)))
+	{
+		printf("%s", line);
+		free(line);
+	}
+
+	close(fd);
+	printf("--- Fin del archivo ---\n");
+	return (0);
+}
+
+
+/*int	main(int argc, char **argv)
+{
+	int	i;
+	char **res;
+
+	while (argc > 1)
+	{
+		i = 0;
+		res = get_next_line(argv[1], ' ');
+		while(res[i])
+		{
+			printf("%s\n", res[i]);
+			i++;
+		}
+	}
+	return (0);
+}*/
+
+/*int main(void)
+{
+    int fd;
+    char *line;
+
+    fd = open("test.txt", O_RDONLY);
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        printf("%s", line);
+        free(line);
+    }
+    close(fd);
+    return (0);
+}*/	
+	/*while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("%s", line);
+		free(line);
+	}
+	close(fd);
+	return (0);
+}*/
+
+========================================
+FILE: get_next_line.h
+========================================
+
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+
+# include <stdlib.h>
+# include <unistd.h>
+# include <fcntl.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
+char	*get_next_line(int fd);
+
+size_t	ft_strlen(const char *s);
+char	*ft_strchr(const char *s, int c);
+char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_strdup(const char *s);
+#endif
