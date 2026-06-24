@@ -1,5 +1,96 @@
 
 ========================================
+FILE: get_next_line_bonus.c
+========================================
+
+#include "get_next_line_bonus.h"
+
+static char	*read_and_stash(int fd, char *stash)
+{
+	char	*buffer;
+	char	*tmp;
+	int		bytes_read;
+
+	buffer = NULL;
+	bytes_read = 1;
+	while (!ft_strchr(stash, '\n') && bytes_read > 0)
+	{
+		buffer = malloc(BUFFER_SIZE + 1);
+		if (!buffer)
+			return (free(stash), NULL);
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read < 0)
+			return (free(buffer), free(stash), NULL);
+		buffer[bytes_read] = '\0';
+		tmp = ft_strjoin(stash, buffer);
+		free(buffer);
+		free(stash);
+		if (!tmp)
+			return (NULL);
+		stash = tmp;
+	}
+	return (stash);
+}
+
+static char	*extract_line(char *stash)
+{
+	char	*line;
+	int		i;
+
+	i = 0;
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (stash[i] == '\n')
+		i++;
+	line = ft_substr(stash, 0, i);
+	return (line);
+}
+
+static char	*update_stash(char *stash)
+{
+	char	*new_stash;
+	int		i;
+
+	i = 0;
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (stash[i] == '\n')
+		i++;
+	new_stash = ft_substr(stash, i, ft_strlen(stash) - i);
+	free(stash);
+	return (new_stash);
+}
+
+char	*get_next_line(int fd)
+{
+	static t_list	*stash_list;
+	t_list		*node;
+	char		*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	node = find_node(stash_list, fd);
+	if (!node)
+	{
+		node = new_node(fd);
+		if (!node)
+			return (NULL);
+		node->next = stash_list;
+		stash_list = node;
+	}
+	node->stash = read_and_stash(fd, node->stash);
+	if (!node->stash || !node->stash[0])
+	{
+		free(node->stash);
+		node->stash = NULL;
+		return (delete_node(&stash_list, fd), NULL);
+	}
+	line = extract_line(node->stash);
+	node->stash = update_stash(node->stash);
+	return (line);
+}
+
+========================================
 FILE: get_next_line.c
 ========================================
 
@@ -85,7 +176,7 @@ char	*get_next_line(int fd)
 FILE: get_next_line_utils_bonus.c
 ========================================
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(const char *s)
 {
@@ -95,7 +186,7 @@ size_t	ft_strlen(const char *s)
 	while (*p)
 		p++;
 	return (p - s);
-}
+} 
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -182,6 +273,56 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 t_list	*find_node(t_list *lst, int fd);
 t_list	*new_node(int fd);
 void	delete_node(t_list **lst, int fd);
+
+t_list	*find_node(t_list *lst, int fd)
+{
+	while (lst)	
+	{
+		if (lst->fd == fd)
+			return (lst);
+		lst = lst->next;
+	}
+	return (NULL);
+}
+
+t_list	*new_node(int fd)
+{
+	t_list	*node;
+
+	node = malloc(sizeof(t_list));
+	if (!node)
+		return (NULL);
+	node->fd = fd;
+	node->stash = NULL;
+	node->next = NULL;
+	return (node);
+}
+
+void	delete_node(t_list **lst, int fd)
+{
+	t_list	*current;
+	t_list	*prev;
+
+	if (!lst || !*lst)
+		return ;
+	current = *lst;
+	prev = NULL;
+	if (current->fd == fd)
+	{
+		*lst = current->next;
+		return (free(current->stash), free(current));
+	}
+	while (current && current->fd != fd)
+	{
+		prev = current;
+		current = current->next;
+	}
+	if (!current)
+		return ;
+	prev->next = current->next;
+	free(current->stash);
+	free(current);
+}
 
 ========================================
 FILE: get_next_line_utils.c
@@ -285,6 +426,14 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 FILE: main.c
 ========================================
 
+	char *line1, *line2;
+
+	line1 = get_next_line(fd1);
+	line2 = get_next_line(fd2);
+
+	if (ac != 2)
+	{
+		printf("Uso: %s archivo\n", argv[0]);
 		return (1);
 	}
 
@@ -305,15 +454,65 @@ FILE: main.c
 	close(fd);
 	printf("--- Fin del archivo ---\n");
 	return (0);
+}*/
+
+int	main(int ac, char **argv)
+{
+	int	fd1;
+	int	fd2;
+	char	*line1;
+	char	*line2;
+	int	active;
+
+	if (ac != 3)
+		return (0);
+	fd1 = open(argv[1], O_RDONLY);
+	fd2 = open(argv[2], O_RDONLY);
+	active = 2;
+	while (active > 0)
+	{
+		if (fd1 != -1)
+		{
+			line1 = get_next_line(fd1);
+			if (!line1)
+			{
+				close(fd1);
+				fd1 = -1;
+				active = active - 1;
+			}
+			else
+			{
+				printf("[%s], %s", argv[1], line1);
+				free(line1);
+			}
+		}
+		if (fd2 != -1)
+		{
+			line2 = get_next_line(fd2);
+			if (!line2)
+			{
+				close(fd2);
+				fd2 = -1;
+				active = active - 1;
+			}
+			else
+			{
+				printf("[%s] %s", argv[2], line2);
+				free(line2);
+			}
+		}
+	}
+	close(fd1);
+	close(fd2);
+	return (0);
 }
 
-
-/*int	main(int argc, char **argv)
+/*int	main(int ac, char **argv)
 {
 	int	i;
 	char **res;
 
-	while (argc > 1)
+	while (ac > 1)
 	{
 		i = 0;
 		res = get_next_line(argv[1], ' ');
@@ -348,6 +547,42 @@ FILE: main.c
 	close(fd);
 	return (0);
 }*/
+
+========================================
+FILE: get_next_line_bonus.h
+========================================
+
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
+
+# include <stdlib.h>
+# include <unistd.h>
+# include <fcntl.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
+typedef struct s_list
+{
+	int		fd;
+	char	*stash;
+	struct	s_list		*next;
+}t_list;
+
+char	*get_next_line(int fd);
+
+size_t	ft_strlen(const char *s);
+char	*ft_strchr(const char *s, int c);
+char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_strdup(const char *s);
+
+t_list	*find_node(t_list *lst, int fd);
+t_list	*new_node(int fd);
+void	delete_node(t_list **lst, int fd);
+
+# endif
 
 ========================================
 FILE: get_next_line.h

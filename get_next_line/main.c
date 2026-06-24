@@ -1,11 +1,19 @@
 #include <stdio.h>
 #include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-
+/*
 int	main(int ac, char **argv)
 {
 	int	fd;
 	char	*line;
+
+	int fd1 = open("test2.txt", O_RDONLY);
+	int fd2 = open("archivo2.txt", O_RDONLY);
+	char *line1, *line2;
+
+	line1 = get_next_line(fd1);
+	line2 = get_next_line(fd2);
 
 	if (ac != 2)
 	{
@@ -30,15 +38,65 @@ int	main(int ac, char **argv)
 	close(fd);
 	printf("--- Fin del archivo ---\n");
 	return (0);
+}*/
+
+int	main(int ac, char **argv)
+{
+	int	fd1;
+	int	fd2;
+	char	*line1;
+	char	*line2;
+	int	active;
+
+	if (ac != 3)
+		return (0);
+	fd1 = open(argv[1], O_RDONLY);
+	fd2 = open(argv[2], O_RDONLY);
+	active = 2;
+	while (active > 0)
+	{
+		if (fd1 != -1)
+		{
+			line1 = get_next_line(fd1);
+			if (!line1)
+			{
+				close(fd1);
+				fd1 = -1;
+				active = active - 1;
+			}
+			else
+			{
+				printf("[%s], %s", argv[1], line1);
+				free(line1);
+			}
+		}
+		if (fd2 != -1)
+		{
+			line2 = get_next_line(fd2);
+			if (!line2)
+			{
+				close(fd2);
+				fd2 = -1;
+				active = active - 1;
+			}
+			else
+			{
+				printf("[%s] %s", argv[2], line2);
+				free(line2);
+			}
+		}
+	}
+	close(fd1);
+	close(fd2);
+	return (0);
 }
 
-
-/*int	main(int argc, char **argv)
+/*int	main(int ac, char **argv)
 {
 	int	i;
 	char **res;
 
-	while (argc > 1)
+	while (ac > 1)
 	{
 		i = 0;
 		res = get_next_line(argv[1], ' ');

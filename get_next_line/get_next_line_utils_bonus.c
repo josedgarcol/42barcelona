@@ -6,11 +6,11 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 17:37:47 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/16 12:20:27 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/24 19:02:40 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(const char *s)
 {
@@ -20,7 +20,7 @@ size_t	ft_strlen(const char *s)
 	while (*p)
 		p++;
 	return (p - s);
-}
+} 
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -107,3 +107,53 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 t_list	*find_node(t_list *lst, int fd);
 t_list	*new_node(int fd);
 void	delete_node(t_list **lst, int fd);
+
+t_list	*find_node(t_list *lst, int fd)
+{
+	while (lst)	
+	{
+		if (lst->fd == fd)
+			return (lst);
+		lst = lst->next;
+	}
+	return (NULL);
+}
+
+t_list	*new_node(int fd)
+{
+	t_list	*node;
+
+	node = malloc(sizeof(t_list));
+	if (!node)
+		return (NULL);
+	node->fd = fd;
+	node->stash = NULL;
+	node->next = NULL;
+	return (node);
+}
+
+void	delete_node(t_list **lst, int fd)
+{
+	t_list	*current;
+	t_list	*prev;
+
+	if (!lst || !*lst)
+		return ;
+	current = *lst;
+	prev = NULL;
+	if (current->fd == fd)
+	{
+		*lst = current->next;
+		return (free(current->stash), free(current));
+	}
+	while (current && current->fd != fd)
+	{
+		prev = current;
+		current = current->next;
+	}
+	if (!current)
+		return ;
+	prev->next = current->next;
+	free(current->stash);
+	free(current);
+}
