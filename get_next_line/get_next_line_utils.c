@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 14:06:25 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/16 12:21:38 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/25 13:32:05 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ size_t	ft_strlen(const char *s)
 {
 	const char	*p;
 
+	if (!s)
+		return (0);
 	p = s;
 	while (*p)
 		p++;
@@ -88,14 +90,13 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	s_len = ft_strlen(s);
 	if (start >= s_len)
 		return (ft_strdup(""));
-	if (len <= s_len - start)
-		new_s = malloc(len + 1);
-	else
-		new_s = malloc((s_len - start) + 1);
+	if (len > s_len - start)
+		len = s_len - start;
+	new_s = malloc(len + 1);
 	if (!new_s)
 		return (NULL);
 	i = 0;
-	while (s[start + i] && i < len)
+	while (i < len)
 	{
 		new_s[i] = s[start + i];
 		i++;

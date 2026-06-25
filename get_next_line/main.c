@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/25 17:04:55 by jcolque           #+#    #+#             */
+/*   Updated: 2026/06/25 17:26:41 by jcolque          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
 #include "get_next_line.h"
 #include "get_next_line_bonus.h"
+#include <fcntl.h>
 
 /*
 int	main(int ac, char **argv)

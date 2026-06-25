@@ -5,13 +5,34 @@ FILE: get_next_line_bonus.c
 
 #include "get_next_line_bonus.h"
 
+t_list	*find_or_create(t_list **lst, int fd)
+{
+	t_list	*cur;
+	t_list	*node;
+
+	cur = *lst;
+	while (cur)
+	{
+		if (cur->fd == fd)
+			return (cur);
+		cur = cur->next;
+	}
+	node = malloc(sizeof(t_list));
+	if (!node)
+		return (NULL);
+	node->fd = fd;
+	node->stash = NULL;
+	node->next = *lst;
+	*lst = node;
+	return (node);
+}
+
 static char	*read_and_stash(int fd, char *stash)
 {
-	char	*buffer;
-	char	*tmp;
-	int		bytes_read;
+	char		*buffer;
+	char		*tmp;
+	ssize_t		bytes_read;
 
-	buffer = NULL;
 	bytes_read = 1;
 	while (!ft_strchr(stash, '\n') && bytes_read > 0)
 	{
@@ -34,22 +55,20 @@ static char	*read_and_stash(int fd, char *stash)
 
 static char	*extract_line(char *stash)
 {
-	char	*line;
-	int		i;
+	size_t	i;
 
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
 		i++;
 	if (stash[i] == '\n')
 		i++;
-	line = ft_substr(stash, 0, i);
-	return (line);
+	return (ft_substr(stash, 0, i));
 }
 
 static char	*update_stash(char *stash)
 {
-	char	*new_stash;
-	int		i;
+	char		*new_stash;
+	size_t		i;
 
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
@@ -64,20 +83,14 @@ static char	*update_stash(char *stash)
 char	*get_next_line(int fd)
 {
 	static t_list	*stash_list;
-	t_list		*node;
-	char		*line;
+	t_list			*node;
+	char			*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	node = find_node(stash_list, fd);
+	node = find_or_create(&stash_list, fd);
 	if (!node)
-	{
-		node = new_node(fd);
-		if (!node)
-			return (NULL);
-		node->next = stash_list;
-		stash_list = node;
-	}
+		return (NULL);
 	node->stash = read_and_stash(fd, node->stash);
 	if (!node->stash || !node->stash[0])
 	{
@@ -95,15 +108,13 @@ FILE: get_next_line.c
 ========================================
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 static char	*read_and_stash(int fd, char *stash)
 {
 	char	*buffer;
 	char	*tmp;
-	int		bytes_read;
+	ssize_t	bytes_read;
 
-	buffer = NULL;
 	bytes_read = 1;
 	while (!ft_strchr(stash, '\n') && bytes_read > 0)
 	{
@@ -126,22 +137,20 @@ static char	*read_and_stash(int fd, char *stash)
 
 static char	*extract_line(char *stash)
 {
-	char	*line;
-	int		i;
+	size_t	i;
 
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
 		i++;
 	if (stash[i] == '\n')
 		i++;
-	line = ft_substr(stash, 0, i);
-	return (line);
+	return (ft_substr(stash, 0, i));
 }
 
 static char	*update_stash(char *stash)
 {
-	char	*new_stash;
-	int		i;
+	char		*new_stash;
+	size_t		i;
 
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
@@ -162,11 +171,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	stash = read_and_stash(fd, stash);
 	if (!stash || !stash[0])
-	{
-		free(stash);
-		stash = NULL;
-		return (NULL);
-	}
+		return (free(stash), stash = NULL, NULL);
 	line = extract_line(stash);
 	stash = update_stash(stash);
 	return (line);
@@ -182,11 +187,13 @@ size_t	ft_strlen(const char *s)
 {
 	const char	*p;
 
+	if (!s)
+		return (0);
 	p = s;
 	while (*p)
 		p++;
 	return (p - s);
-} 
+}
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -203,35 +210,20 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strdup(const char *s)
-{
-	char	*dup;
-	char	*p;
-
-	if (!s)
-		return (NULL);
-	dup = malloc(ft_strlen(s) + 1);
-	if (!dup)
-		return (NULL);
-	p = dup;
-	while (*s)
-		*p++ = *s++;
-	*p = '\0';
-	return (dup);
-}
-
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*joined;
 	char	*p;
+	size_t	len;
 
 	if (!s1 && !s2)
 		return (NULL);
-	if (!s1)
-		return (ft_strdup(s2));
 	if (!s2)
-		return (ft_strdup(s1));
-	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+		s2 = "";
+	if (!s1)
+		s1 = "";
+	len = ft_strlen(s1) + ft_strlen(s2);
+	joined = malloc(len + 1);
 	if (!joined)
 		return (NULL);
 	p = joined;
@@ -253,15 +245,14 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (NULL);
 	s_len = ft_strlen(s);
 	if (start >= s_len)
-		return (ft_strdup(""));
-	if (len <= s_len - start)
-		new_s = malloc(len + 1);
-	else
-		new_s = malloc((s_len - start) + 1);
+		len = 0;
+	else if (len > s_len - start)
+		len = s_len - start;
+	new_s = malloc(len + 1);
 	if (!new_s)
 		return (NULL);
 	i = 0;
-	while (s[start + i] && i < len)
+	while (i < len)
 	{
 		new_s[i] = s[start + i];
 		i++;
@@ -270,58 +261,28 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (new_s);
 }
 
-t_list	*find_node(t_list *lst, int fd);
-t_list	*new_node(int fd);
-void	delete_node(t_list **lst, int fd);
-
-t_list	*find_node(t_list *lst, int fd)
-{
-	while (lst)	
-	{
-		if (lst->fd == fd)
-			return (lst);
-		lst = lst->next;
-	}
-	return (NULL);
-}
-
-t_list	*new_node(int fd)
-{
-	t_list	*node;
-
-	node = malloc(sizeof(t_list));
-	if (!node)
-		return (NULL);
-	node->fd = fd;
-	node->stash = NULL;
-	node->next = NULL;
-	return (node);
-}
-
 void	delete_node(t_list **lst, int fd)
 {
-	t_list	*current;
+	t_list	*cur;
 	t_list	*prev;
 
 	if (!lst || !*lst)
 		return ;
-	current = *lst;
+	cur = *lst;
 	prev = NULL;
-	if (current->fd == fd)
+	while (cur && cur->fd != fd)
 	{
-		*lst = current->next;
-		return (free(current->stash), free(current));
+		prev = cur;
+		cur = cur->next;
 	}
-	while (current && current->fd != fd)
-	{
-		prev = current;
-		current = current->next;
-	}
-	if (!current)
+	if (!cur)
 		return ;
-	prev->next = current->next;
-	free(current->stash);
-	free(current);
+	if (!prev)
+		*lst = cur->next;
+	else
+		prev->next = cur->next;
+	free(cur->stash);
+	free(cur);
 }
 
 ========================================
@@ -334,6 +295,8 @@ size_t	ft_strlen(const char *s)
 {
 	const char	*p;
 
+	if (!s)
+		return (0);
 	p = s;
 	while (*p)
 		p++;
@@ -406,14 +369,13 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	s_len = ft_strlen(s);
 	if (start >= s_len)
 		return (ft_strdup(""));
-	if (len <= s_len - start)
-		new_s = malloc(len + 1);
-	else
-		new_s = malloc((s_len - start) + 1);
+	if (len > s_len - start)
+		len = s_len - start;
+	new_s = malloc(len + 1);
 	if (!new_s)
 		return (NULL);
 	i = 0;
-	while (s[start + i] && i < len)
+	while (i < len)
 	{
 		new_s[i] = s[start + i];
 		i++;
@@ -426,6 +388,19 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 FILE: main.c
 ========================================
 
+#include <stdio.h>
+#include "get_next_line.h"
+#include "get_next_line_bonus.h"
+#include <fcntl.h>
+
+/*
+int	main(int ac, char **argv)
+{
+	int	fd;
+	char	*line;
+
+	int fd1 = open("test2.txt", O_RDONLY);
+	int fd2 = open("archivo2.txt", O_RDONLY);
 	char *line1, *line2;
 
 	line1 = get_next_line(fd1);
@@ -557,7 +532,6 @@ FILE: get_next_line_bonus.h
 
 # include <stdlib.h>
 # include <unistd.h>
-# include <fcntl.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
@@ -565,10 +539,10 @@ FILE: get_next_line_bonus.h
 
 typedef struct s_list
 {
-	int		fd;
-	char	*stash;
-	struct	s_list		*next;
-}t_list;
+	int				fd;
+	char			*stash;
+	struct s_list	*next;
+}	t_list;
 
 char	*get_next_line(int fd);
 
@@ -576,13 +550,10 @@ size_t	ft_strlen(const char *s);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
-char	*ft_strdup(const char *s);
 
-t_list	*find_node(t_list *lst, int fd);
-t_list	*new_node(int fd);
+t_list	*find_or_create(t_list **lst, int fd);
 void	delete_node(t_list **lst, int fd);
-
-# endif
+#endif
 
 ========================================
 FILE: get_next_line.h
@@ -593,7 +564,6 @@ FILE: get_next_line.h
 
 # include <stdlib.h>
 # include <unistd.h>
-# include <fcntl.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42

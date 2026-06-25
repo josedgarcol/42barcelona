@@ -6,20 +6,18 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 11:32:07 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/23 17:59:53 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/25 18:15:21 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 static char	*read_and_stash(int fd, char *stash)
 {
 	char	*buffer;
 	char	*tmp;
-	int		bytes_read;
+	ssize_t	bytes_read;
 
-	buffer = NULL;
 	bytes_read = 1;
 	while (!ft_strchr(stash, '\n') && bytes_read > 0)
 	{
@@ -42,22 +40,20 @@ static char	*read_and_stash(int fd, char *stash)
 
 static char	*extract_line(char *stash)
 {
-	char	*line;
-	int		i;
+	size_t	i;
 
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
 		i++;
 	if (stash[i] == '\n')
 		i++;
-	line = ft_substr(stash, 0, i);
-	return (line);
+	return (ft_substr(stash, 0, i));
 }
 
 static char	*update_stash(char *stash)
 {
-	char	*new_stash;
-	int		i;
+	char		*new_stash;
+	size_t		i;
 
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
@@ -78,11 +74,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	stash = read_and_stash(fd, stash);
 	if (!stash || !stash[0])
-	{
-		free(stash);
-		stash = NULL;
-		return (NULL);
-	}
+		return (free(stash), stash = NULL, NULL);
 	line = extract_line(stash);
 	stash = update_stash(stash);
 	return (line);
