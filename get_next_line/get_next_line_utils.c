@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 14:06:25 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/25 13:32:05 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/27 19:56:27 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,35 +39,20 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strdup(const char *s)
-{
-	char	*dup;
-	char	*p;
-
-	if (!s)
-		return (NULL);
-	dup = malloc(ft_strlen(s) + 1);
-	if (!dup)
-		return (NULL);
-	p = dup;
-	while (*s)
-		*p++ = *s++;
-	*p = '\0';
-	return (dup);
-}
-
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*joined;
 	char	*p;
+	size_t	len;
 
 	if (!s1 && !s2)
 		return (NULL);
 	if (!s1)
-		return (ft_strdup(s2));
+		s1 = "";
 	if (!s2)
-		return (ft_strdup(s1));
-	joined = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+		s2 = "";
+	len = ft_strlen(s1) + ft_strlen(s2);
+	joined = malloc(len + 1);
 	if (!joined)
 		return (NULL);
 	p = joined;
@@ -89,8 +74,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (NULL);
 	s_len = ft_strlen(s);
 	if (start >= s_len)
-		return (ft_strdup(""));
-	if (len > s_len - start)
+		len = 0;
+	else if (len > s_len - start)
 		len = s_len - start;
 	new_s = malloc(len + 1);
 	if (!new_s)

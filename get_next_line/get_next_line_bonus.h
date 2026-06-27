@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/24 15:08:47 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/25 17:03:26 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/27 21:05:33 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,9 @@
 #  define BUFFER_SIZE 42
 # endif
 
-typedef struct s_list
-{
-	int				fd;
-	char			*stash;
-	struct s_list	*next;
-}	t_list;
+# ifndef OPEN_MAX
+#  define OPEN_MAX 4096
+# endif
 
 char	*get_next_line(int fd);
 
@@ -34,6 +31,4 @@ char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 
-t_list	*find_or_create(t_list **lst, int fd);
-void	delete_node(t_list **lst, int fd);
 #endif

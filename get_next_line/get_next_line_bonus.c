@@ -6,58 +6,37 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/24 15:13:34 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/25 17:00:26 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/27 21:07:28 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-t_list	*find_or_create(t_list **lst, int fd)
-{
-	t_list	*cur;
-	t_list	*node;
-
-	cur = *lst;
-	while (cur)
-	{
-		if (cur->fd == fd)
-			return (cur);
-		cur = cur->next;
-	}
-	node = malloc(sizeof(t_list));
-	if (!node)
-		return (NULL);
-	node->fd = fd;
-	node->stash = NULL;
-	node->next = *lst;
-	*lst = node;
-	return (node);
-}
-
 static char	*read_and_stash(int fd, char *stash)
 {
-	char		*buffer;
-	char		*tmp;
-	ssize_t		bytes_read;
+	char	*buffer;
+	char	*tmp;
+	ssize_t	bytes_read;
 
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (free(stash), NULL);
 	bytes_read = 1;
 	while (!ft_strchr(stash, '\n') && bytes_read > 0)
 	{
-		buffer = malloc(BUFFER_SIZE + 1);
-		if (!buffer)
-			return (free(stash), NULL);
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
 			return (free(buffer), free(stash), NULL);
+		if (bytes_read == 0)
+			break ;
 		buffer[bytes_read] = '\0';
 		tmp = ft_strjoin(stash, buffer);
-		free(buffer);
 		free(stash);
-		if (!tmp)
-			return (NULL);
 		stash = tmp;
+		if (!stash)
+			return (free(buffer), NULL);
 	}
-	return (stash);
+	return (free(buffer), stash);
 }
 
 static char	*extract_line(char *stash)
@@ -80,8 +59,9 @@ static char	*update_stash(char *stash)
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
 		i++;
-	if (stash[i] == '\n')
-		i++;
+	if (!stash[i])
+		return (free(stash), NULL);
+	i++;
 	new_stash = ft_substr(stash, i, ft_strlen(stash) - i);
 	free(stash);
 	return (new_stash);
@@ -89,23 +69,17 @@ static char	*update_stash(char *stash)
 
 char	*get_next_line(int fd)
 {
-	static t_list	*stash_list;
-	t_list			*node;
-	char			*line;
+	static char	*stash[OPEN_MAX];
+	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= OPEN_MAX)
 		return (NULL);
-	node = find_or_create(&stash_list, fd);
-	if (!node)
-		return (NULL);
-	node->stash = read_and_stash(fd, node->stash);
-	if (!node->stash || !node->stash[0])
-	{
-		free(node->stash);
-		node->stash = NULL;
-		return (delete_node(&stash_list, fd), NULL);
-	}
-	line = extract_line(node->stash);
-	node->stash = update_stash(node->stash);
+	stash[fd] = read_and_stash(fd, stash[fd]);
+	if (!stash[fd] || !stash[fd][0])
+		return (free(stash[fd]), stash[fd] = NULL, NULL);
+	line = extract_line(stash[fd]);
+	if (!line)
+		return (free(stash[fd]), stash[fd] = NULL, NULL);
+	stash[fd] = update_stash(stash[fd]);
 	return (line);
 }

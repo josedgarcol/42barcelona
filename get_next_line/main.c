@@ -6,15 +6,63 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 17:04:55 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/25 17:26:41 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/27 18:50:08 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "get_next_line.h"
-#include "get_next_line_bonus.h"
+//#include "get_next_line_bonus.h"
 #include <fcntl.h>
+/*
+static void	test_file(char *name)
+{
+	int	fd;
+	char	*line;
+	int	i;
 
+	printf("\n === %s === \n", name);
+	fd = open(name, O_RDONLY);
+	if (fd < 0)
+		return ;
+	i = 1;
+	while ((line = get_next_line(fd)))
+	{
+		printf("[%d] %s", i++, line);
+		if (line[ft_strlen(line) - 1] != '\n')
+			printf("\n");
+
+		free (line);
+	}
+	close (fd);
+}
+
+int	main(void)
+{
+	test_file("empty.txt");
+	test_file("1char.txt");
+	test_file("one_line_no_n1.txt");
+	test_file("only_n1.txt");
+	test_file("multiple_nl.txt");
+	test_file("variable_nls.txt");
+	test_file("lines_around_10.txt");
+	test_file("giant_line.txt");
+	test_file("giant_line_nl.txt");
+	test_file("read_error.txt");
+	return (0);
+}*/
+
+int	main(void)
+{
+	int	fd;
+	char	*line;
+
+	fd = open("variable_nls.txt", O_RDONLY);
+
+	while ((line = get_next_line(fd)))
+		free(line);
+	close(fd);
+}
 /*
 int	main(int ac, char **argv)
 {
@@ -53,6 +101,7 @@ int	main(int ac, char **argv)
 	return (0);
 }*/
 
+/*
 int	main(int ac, char **argv)
 {
 	int	fd1;
@@ -102,7 +151,7 @@ int	main(int ac, char **argv)
 	close(fd1);
 	close(fd2);
 	return (0);
-}
+}*/
 
 /*int	main(int ac, char **argv)
 {

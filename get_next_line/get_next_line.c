@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 11:32:07 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/25 18:15:21 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/27 19:06:08 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,25 @@ static char	*read_and_stash(int fd, char *stash)
 	char	*tmp;
 	ssize_t	bytes_read;
 
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (free(stash), NULL);
 	bytes_read = 1;
 	while (!ft_strchr(stash, '\n') && bytes_read > 0)
 	{
-		buffer = malloc(BUFFER_SIZE + 1);
-		if (!buffer)
-			return (free(stash), NULL);
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read < 0)
 			return (free(buffer), free(stash), NULL);
+		if (bytes_read == 0)
+			break ;
 		buffer[bytes_read] = '\0';
 		tmp = ft_strjoin(stash, buffer);
-		free(buffer);
 		free(stash);
-		if (!tmp)
-			return (NULL);
 		stash = tmp;
+		if (!stash)
+			return (free(buffer), NULL);
 	}
-	return (stash);
+	return (free(buffer), stash);
 }
 
 static char	*extract_line(char *stash)
@@ -58,8 +59,9 @@ static char	*update_stash(char *stash)
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
 		i++;
-	if (stash[i] == '\n')
-		i++;
+	if (!stash[i])
+		return (free(stash), NULL);
+	i++;
 	new_stash = ft_substr(stash, i, ft_strlen(stash) - i);
 	free(stash);
 	return (new_stash);
@@ -76,6 +78,8 @@ char	*get_next_line(int fd)
 	if (!stash || !stash[0])
 		return (free(stash), stash = NULL, NULL);
 	line = extract_line(stash);
+	if (!line)
+		return (free(stash), stash = NULL, NULL);
 	stash = update_stash(stash);
 	return (line);
 }

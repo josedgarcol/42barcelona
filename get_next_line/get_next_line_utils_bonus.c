@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 17:37:47 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/25 16:58:59 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/27 19:57:59 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	if (!s1 && !s2)
 		return (NULL);
-	if (!s2)
-		s2 = "";
 	if (!s1)
 		s1 = "";
+	if (!s2)
+		s2 = "";
 	len = ft_strlen(s1) + ft_strlen(s2);
 	joined = malloc(len + 1);
 	if (!joined)
@@ -88,28 +88,4 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	}
 	new_s[i] = '\0';
 	return (new_s);
-}
-
-void	delete_node(t_list **lst, int fd)
-{
-	t_list	*cur;
-	t_list	*prev;
-
-	if (!lst || !*lst)
-		return ;
-	cur = *lst;
-	prev = NULL;
-	while (cur && cur->fd != fd)
-	{
-		prev = cur;
-		cur = cur->next;
-	}
-	if (!cur)
-		return ;
-	if (!prev)
-		*lst = cur->next;
-	else
-		prev->next = cur->next;
-	free(cur->stash);
-	free(cur);
 }
