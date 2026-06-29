@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/25 17:04:55 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/27 18:50:08 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/06/29 15:21:04 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,6 @@
 #include "get_next_line.h"
 //#include "get_next_line_bonus.h"
 #include <fcntl.h>
-/*
-static void	test_file(char *name)
-{
-	int	fd;
-	char	*line;
-	int	i;
-
-	printf("\n === %s === \n", name);
-	fd = open(name, O_RDONLY);
-	if (fd < 0)
-		return ;
-	i = 1;
-	while ((line = get_next_line(fd)))
-	{
-		printf("[%d] %s", i++, line);
-		if (line[ft_strlen(line) - 1] != '\n')
-			printf("\n");
-
-		free (line);
-	}
-	close (fd);
-}
 
 int	main(void)
 {
@@ -63,6 +41,31 @@ int	main(void)
 		free(line);
 	close(fd);
 }
+
+
+/*
+static void	test_file(char *name)
+{
+	int	fd;
+	char	*line;
+	int	i;
+
+	printf("\n === %s === \n", name);
+	fd = open(name, O_RDONLY);
+	if (fd < 0)
+		return ;
+	i = 1;
+	while ((line = get_next_line(fd)))
+	{
+		printf("[%d] %s", i++, line);
+		if (line[ft_strlen(line) - 1] != '\n')
+			printf("\n");
+
+		free (line);
+	}
+	close (fd);
+}
+*/
 /*
 int	main(int ac, char **argv)
 {
