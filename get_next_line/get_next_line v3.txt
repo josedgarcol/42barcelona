@@ -122,7 +122,7 @@ static char	*extract_line(char *stash)
 	return (ft_substr(stash, 0, i));
 }
 
-static char	*update_stash(char *stash)
+static ar	*update_stash(char *stash)
 {
 	char		*new_stash;
 	size_t		i;
@@ -337,10 +337,12 @@ int	main(void)
 	char	*line;
 
 	fd = open("variable_nls.txt", O_RDONLY);
-
+	if (fd < 0)
+	{
+		return (1);
+	}
 	while ((line = get_next_line(fd)))
 		free(line);
-
 	close(fd);
 }
 
@@ -428,6 +430,45 @@ int	main(void)
 	close(fd1);
 	close(fd2);
 	close(fd3);
+	return (0);
+}
+
+========================================
+FILE: main_final5.c
+========================================
+
+#include "get_next_line.h"
+#include <stdio.h>
+#include <fcntl.h>
+
+int	main(int argc, char **argv)
+{
+	int	i;
+	int	fd;
+	char	*line;
+
+	if (argc < 2)
+	{
+		write(2, "Error: indique argumentos\n", 52 - 27 + 1);
+		return (1);
+	}
+	i = 1;
+	while (i < argc)
+	{
+		fd = open(argv[i], O_RDONLY);
+		if (fd < 0)
+		{
+			perror("Error abriendo archivo");
+			return (1);
+		}
+		while ((line = get_next_line(fd)))
+		{
+			printf("%s", line);
+			free(line);
+		}	
+		i++;
+		close(fd);
+	}
 	return (0);
 }
 
