@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 11:32:07 by jcolque           #+#    #+#             */
-/*   Updated: 2026/07/01 16:24:46 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/08/04 14:27:16 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static char	*extract_line(char *stash)
 	return (ft_substr(stash, 0, i));
 }
 
-static ar	*update_stash(char *stash)
+static char	*update_stash(char *stash)
 {
 	char		*new_stash;
 	size_t		i;
@@ -59,7 +59,7 @@ static ar	*update_stash(char *stash)
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
 		i++;
-	if (!stash[i])
+	if (!stash[i] || !stash[i + 1])
 		return (free(stash), NULL);
 	i++;
 	new_stash = ft_substr(stash, i, ft_strlen(stash) - i);

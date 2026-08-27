@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/24 15:13:34 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/27 21:07:28 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/08/04 14:27:47 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static char	*update_stash(char *stash)
 	i = 0;
 	while (stash[i] && stash[i] != '\n')
 		i++;
-	if (!stash[i])
+	if (!stash[i] || !stash[i + 1])
 		return (free(stash), NULL);
 	i++;
 	new_stash = ft_substr(stash, i, ft_strlen(stash) - i);
@@ -69,10 +69,10 @@ static char	*update_stash(char *stash)
 
 char	*get_next_line(int fd)
 {
-	static char	*stash[OPEN_MAX];
+	static char	*stash[4096];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= OPEN_MAX)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= 4096)
 		return (NULL);
 	stash[fd] = read_and_stash(fd, stash[fd]);
 	if (!stash[fd] || !stash[fd][0])

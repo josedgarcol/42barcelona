@@ -6,7 +6,7 @@
 /*   By: jcolque <jcolque@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/24 15:08:47 by jcolque           #+#    #+#             */
-/*   Updated: 2026/06/27 21:05:33 by jcolque          ###   ########.fr       */
+/*   Updated: 2026/07/28 18:10:14 by jcolque          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,6 @@
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
-# endif
-
-# ifndef OPEN_MAX
-#  define OPEN_MAX 4096
 # endif
 
 char	*get_next_line(int fd);
