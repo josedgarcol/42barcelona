@@ -1,0 +1,567 @@
+
+========================================
+FILE: get_next_line_bonus.c
+========================================
+
+#include "get_next_line_bonus.h"
+
+static char	*read_and_stash(int fd, char *stash)
+{
+	char	*buffer;
+	char	*tmp;
+	ssize_t	bytes_read;
+
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (free(stash), NULL);
+	bytes_read = 1;
+	while (!ft_strchr(stash, '\n') && bytes_read > 0)
+	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read < 0)
+			return (free(buffer), free(stash), NULL);
+		if (bytes_read == 0)
+			break ;
+		buffer[bytes_read] = '\0';
+		tmp = ft_strjoin(stash, buffer);
+		free(stash);
+		stash = tmp;
+		if (!stash)
+			return (free(buffer), NULL);
+	}
+	return (free(buffer), stash);
+}
+
+static char	*extract_line(char *stash)
+{
+	size_t	i;
+
+	i = 0;
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (stash[i] == '\n')
+		i++;
+	return (ft_substr(stash, 0, i));
+}
+
+static char	*update_stash(char *stash)
+{
+	char		*new_stash;
+	size_t		i;
+
+	i = 0;
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (!stash[i])
+		return (free(stash), NULL);
+	i++;
+	new_stash = ft_substr(stash, i, ft_strlen(stash) - i);
+	free(stash);
+	return (new_stash);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*stash[OPEN_MAX];
+	char		*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= OPEN_MAX)
+		return (NULL);
+	stash[fd] = read_and_stash(fd, stash[fd]);
+	if (!stash[fd] || !stash[fd][0])
+		return (free(stash[fd]), stash[fd] = NULL, NULL);
+	line = extract_line(stash[fd]);
+	if (!line)
+		return (free(stash[fd]), stash[fd] = NULL, NULL);
+	stash[fd] = update_stash(stash[fd]);
+	return (line);
+}
+
+========================================
+FILE: get_next_line.c
+========================================
+
+#include "get_next_line.h"
+
+static char	*read_and_stash(int fd, char *stash)
+{
+	char	*buffer;
+	char	*tmp;
+	ssize_t	bytes_read;
+
+	buffer = malloc(BUFFER_SIZE + 1);
+	if (!buffer)
+		return (free(stash), NULL);
+	bytes_read = 1;
+	while (!ft_strchr(stash, '\n') && bytes_read > 0)
+	{
+		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		if (bytes_read < 0)
+			return (free(buffer), free(stash), NULL);
+		if (bytes_read == 0)
+			break ;
+		buffer[bytes_read] = '\0';
+		tmp = ft_strjoin(stash, buffer);
+		free(stash);
+		stash = tmp;
+		if (!stash)
+			return (free(buffer), NULL);
+	}
+	return (free(buffer), stash);
+}
+
+static char	*extract_line(char *stash)
+{
+	size_t	i;
+
+	i = 0;
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (stash[i] == '\n')
+		i++;
+	return (ft_substr(stash, 0, i));
+}
+
+static ar	*update_stash(char *stash)
+{
+	char		*new_stash;
+	size_t		i;
+
+	i = 0;
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (!stash[i])
+		return (free(stash), NULL);
+	i++;
+	new_stash = ft_substr(stash, i, ft_strlen(stash) - i);
+	free(stash);
+	return (new_stash);
+}
+
+char	*get_next_line(int fd)
+{
+	static char	*stash;
+	char		*line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	stash = read_and_stash(fd, stash);
+	if (!stash || !stash[0])
+		return (free(stash), stash = NULL, NULL);
+	line = extract_line(stash);
+	if (!line)
+		return (free(stash), stash = NULL, NULL);
+	stash = update_stash(stash);
+	return (line);
+}
+
+========================================
+FILE: get_next_line_utils_bonus.c
+========================================
+
+#include "get_next_line_bonus.h"
+
+size_t	ft_strlen(const char *s)
+{
+	const char	*p;
+
+	if (!s)
+		return (0);
+	p = s;
+	while (*p)
+		p++;
+	return (p - s);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	if (!s)
+		return (NULL);
+	while (*s)
+	{
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
+	}
+	if ((char)c == '\0')
+		return ((char *)s);
+	return (NULL);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*joined;
+	char	*p;
+	size_t	len;
+
+	if (!s1 && !s2)
+		return (NULL);
+	if (!s1)
+		s1 = "";
+	if (!s2)
+		s2 = "";
+	len = ft_strlen(s1) + ft_strlen(s2);
+	joined = malloc(len + 1);
+	if (!joined)
+		return (NULL);
+	p = joined;
+	while (*s1)
+		*p++ = *s1++;
+	while (*s2)
+		*p++ = *s2++;
+	*p = '\0';
+	return (joined);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t	s_len;
+	size_t	i;
+	char	*new_s;
+
+	if (!s)
+		return (NULL);
+	s_len = ft_strlen(s);
+	if (start >= s_len)
+		len = 0;
+	else if (len > s_len - start)
+		len = s_len - start;
+	new_s = malloc(len + 1);
+	if (!new_s)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		new_s[i] = s[start + i];
+		i++;
+	}
+	new_s[i] = '\0';
+	return (new_s);
+}
+
+========================================
+FILE: get_next_line_utils.c
+========================================
+
+#include "get_next_line.h"
+
+size_t	ft_strlen(const char *s)
+{
+	const char	*p;
+
+	if (!s)
+		return (0);
+	p = s;
+	while (*p)
+		p++;
+	return (p - s);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	if (!s)
+		return (NULL);
+	while (*s)
+	{
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
+	}
+	if ((char)c == '\0')
+		return ((char *)s);
+	return (NULL);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*joined;
+	char	*p;
+	size_t	len;
+
+	if (!s1 && !s2)
+		return (NULL);
+	if (!s1)
+		s1 = "";
+	if (!s2)
+		s2 = "";
+	len = ft_strlen(s1) + ft_strlen(s2);
+	joined = malloc(len + 1);
+	if (!joined)
+		return (NULL);
+	p = joined;
+	while (*s1)
+		*p++ = *s1++;
+	while (*s2)
+		*p++ = *s2++;
+	*p = '\0';
+	return (joined);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t	s_len;
+	size_t	i;
+	char	*new_s;
+
+	if (!s)
+		return (NULL);
+	s_len = ft_strlen(s);
+	if (start >= s_len)
+		len = 0;
+	else if (len > s_len - start)
+		len = s_len - start;
+	new_s = malloc(len + 1);
+	if (!new_s)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		new_s[i] = s[start + i];
+		i++;
+	}
+	new_s[i] = '\0';
+	return (new_s);
+}
+
+========================================
+FILE: main_final2.c
+========================================
+
+#include "get_next_line.h"
+#include <stdio.h>
+#include <fcntl.h>
+
+int	main(void)
+{
+	int	fd;
+	char	*line;
+
+	fd = open("variable_nls.txt", O_RDONLY);
+	if (fd < 0)
+	{
+		return (1);
+	}
+	while ((line = get_next_line(fd)))
+		free(line);
+	close(fd);
+}
+
+========================================
+FILE: main_final3.c
+========================================
+
+#include "get_next_line.h"
+#include <stdio.h>
+#include <fcntl.h>
+
+int	main(void)
+{
+	int	fd;
+	char	*line;
+
+	fd = open("one_line_no_nl.txt", O_RDONLY);
+	line = get_next_line(fd);
+	printf("'%s'", line);
+	free(line);
+
+	line = get_next_line(fd);
+	printf("%p\n", line);
+
+	close(fd);
+}
+
+========================================
+FILE: main_final4.c
+========================================
+
+#include "get_next_line_bonus.h"
+#include <stdio.h>
+#include <fcntl.h>
+
+static void	print_line(char *line, int fd)
+{
+	if (line)
+	{
+		printf("[fd %d] %s", fd, line);
+		free(line);
+	}
+}
+
+int	main(void)
+{
+	int	fd1;
+	int	fd2;
+	int	fd3;
+	char	*line;
+	int	alive;
+
+	fd1 = open("multiple_nl.txt", O_RDONLY);
+	fd2 = open("lines_around_10.txt", O_RDONLY);
+	fd3 = open("variable_nls.txt", O_RDONLY);
+
+	if (fd1 < 0 || fd2 < 0 || fd3 < 0)
+		return (1);
+	
+	while (1)
+	{
+		alive = 0;
+
+		line = get_next_line(fd1);
+		if (line)
+		{
+			print_line(line, fd1);
+			alive = 1;
+		}
+		line = get_next_line(fd2);
+		if (line)
+		{
+			print_line(line, fd2);
+			alive = 1;
+		}
+		line = get_next_line(fd3);
+		if (line)
+		{
+			print_line(line, fd3);
+			alive = 1;
+		}
+		if (!alive)
+			break ;
+	}
+	close(fd1);
+	close(fd2);
+	close(fd3);
+	return (0);
+}
+
+========================================
+FILE: main_final5.c
+========================================
+
+#include "get_next_line.h"
+#include <stdio.h>
+#include <fcntl.h>
+
+int	main(int argc, char **argv)
+{
+	int	i;
+	int	fd;
+	char	*line;
+
+	if (argc < 2)
+	{
+		write(2, "Error: indique argumentos\n", 52 - 27 + 1);
+		return (1);
+	}
+	i = 1;
+	while (i < argc)
+	{
+		fd = open(argv[i], O_RDONLY);
+		if (fd < 0)
+		{
+			perror("Error abriendo archivo");
+			return (1);
+		}
+		while ((line = get_next_line(fd)))
+		{
+			printf("%s", line);
+			free(line);
+		}	
+		i++;
+		close(fd);
+	}
+	return (0);
+}
+
+========================================
+FILE: main_final.c
+========================================
+
+#include "get_next_line.h"
+#include <stdio.h>
+#include <fcntl.h>
+
+static	void	test_file(char *name)
+{
+	int	fd;
+	char	*line;
+	int	i;
+
+	printf("\n===== %s =====\n", name);
+	fd = open(name, O_RDONLY);
+	if (fd < 0)
+		return ;
+	i = 1;
+	while ((line = get_next_line(fd)))
+	{
+		printf("[%d] %s", i++, line);
+		if (line[ft_strlen(line) - 1] != '\n')
+			printf("\n");
+		free(line);
+	}
+	close(fd);
+}
+
+int	main(void)
+{
+	test_file("empty.txt");
+	test_file("1char.txt");
+	test_file("one_line_no_nl.txt");
+	test_file("only_nl.txt");
+	test_file("multiple_nl.txt");
+	test_file("variable_nls.txt");
+	test_file("lines_around_10.txt");
+	test_file("giant_line.txt");
+	test_file("giant_line_nl.txt");
+	test_file("read_error.txt");
+
+	return (0);
+}
+
+========================================
+FILE: get_next_line_bonus.h
+========================================
+
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
+
+# include <stdlib.h>
+# include <unistd.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
+# ifndef OPEN_MAX
+#  define OPEN_MAX 4096
+# endif
+
+char	*get_next_line(int fd);
+
+size_t	ft_strlen(const char *s);
+char	*ft_strchr(const char *s, int c);
+char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+
+#endif
+
+========================================
+FILE: get_next_line.h
+========================================
+
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
+
+# include <stdlib.h>
+# include <unistd.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
+char	*get_next_line(int fd);
+
+size_t	ft_strlen(const char *s);
+char	*ft_strchr(const char *s, int c);
+char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+#endif
